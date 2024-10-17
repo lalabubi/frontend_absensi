@@ -1,72 +1,71 @@
-import * as React from 'react';
-import Grid from '@mui/material/Grid2';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import Copyright from '../internals/components/Copyright';
-import ChartUserByCountry from './ChartUserByCountry';
-import CustomizedTreeView from './CustomizedTreeView';
-import CustomizedDataGrid from './CustomizedDataGrid';
-import PageViewsBarChart from './PageViewsBarChart';
-import SessionsChart from './SessionsChart';
-import StatCard from './StatCard';
-import TableSiswa from './TableSiswa';
+import * as React from "react";
+import Grid from "@mui/material/Grid2";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Copyright from "../internals/components/Copyright";
+import StatCard from "./StatCard";
+import TableSiswa from "./TableSiswa";
+import { useEffect, useState } from "react";
+import client from "../../../routes/Client";
 
-const today = new Date()
-const month = today.getMonth() + 1
-const year = today.getFullYear()
+const today = new Date();
+const month = today.getMonth() + 1;
+const year = today.getFullYear();
 
-const daysInMonth = new Date(year, month, 0).getDate()
-const daysInMonthString = daysInMonth.toString()
-// console.log(daysInMonth)
-
-
-const data = [
-  {
-    title: 'Hadir',
-    value: '30',
-    interval: `Last ${daysInMonth} days`,
-    trend: 'up',
-    data: [
-      36, 36, 36, 35, 32, 36, 100, 240, 280, 240, 300, 340, 320, 360, 340, 380,
-      360, 400, 380, 420, 400, 640, 340, 460, 440, 480, 460, 600, 880, 920,
-    ],
-  },
-  {
-    title: 'Izin',
-    value: '2',
-    interval: `Last ${daysInMonth} days`,
-    trend: 'down',
-    data: [
-      1640, 1250, 970, 1130, 1050, 900, 720, 1080, 900, 450, 920, 820, 840, 600, 820,
-      780, 800, 760, 380, 740, 660, 620, 840, 500, 520, 480, 400, 360, 300, 220,
-    ],
-  },
-  {
-    title: 'Alpha',
-    value: '3',
-    interval: `Last ${daysInMonth} days`,
-    trend: 'neutral',
-    data: [
-      500, 400, 510, 530, 520, 600, 530, 520, 510, 730, 520, 510, 530, 620, 510, 530,
-      520, 410, 530, 520, 610, 530, 520, 610, 530, 420, 510, 430, 520, 510,
-    ],
-  },
-  {
-    title: 'Sakit',
-    value: '1',
-    interval: `Last ${daysInMonth} days`,
-    trend: 'neutral',
-    data: [
-      500, 400, 510, 530, 520, 600, 530, 520, 510, 730, 520, 510, 530, 620, 510, 530,
-      520, 410, 530, 520, 610, 530, 520, 610, 530, 420, 510, 430, 520, 510,
-    ],
-  },
-];
+const daysInMonth = new Date(year, month, 0).getDate();
 
 export default function MainGrid() {
+  // State untuk data presensi
+  const [telatData, setTelatData] = useState(0);
+  const [hadirData, setHadirData] = useState(0);
+
+  useEffect(() => {
+    // Fetch data telat
+    client.get("presensi/telat").then(({ data }) => {
+      setTelatData(data.data.length); // Tetapkan jumlah data telat
+      console.log(data.data.length);
+    });
+
+    // Fetch data hadir
+    client.get("presensi/hadir").then(({ data }) => {
+      setHadirData(data.data.length); // Tetapkan jumlah data hadir
+    });
+  }, []);
+
+  // Card data yang di-update menggunakan data dari API
+  const cardData = [
+    {
+      title: "Hadir",
+      value: hadirData, // Jumlah hadir dari data API
+      interval: `Last ${daysInMonth} days`,
+      trend: "up",
+      data: [], // Bisa diisi jika dibutuhkan
+    },
+    // {
+    //   title: "Izin",
+    //   value: "2", // Bisa di-update dengan data dari API jika diperlukan
+    //   interval: `Last ${daysInMonth} days`,
+    //   trend: "down",
+    //   data: [], // Kosong atau bisa diisi sesuai kebutuhan
+    // },
+    // {
+    //   title: "Alpha",
+    //   value: "3", // Bisa di-update dengan data dari API jika diperlukan
+    //   interval: `Last ${daysInMonth} days`,
+    //   trend: "neutral",
+    //   data: [], // Kosong atau bisa diisi sesuai kebutuhan
+    // },
+    {
+      title: "Telat",
+      value: telatData, // Jumlah telat dari data API
+      interval: `Last ${daysInMonth} days`,
+      trend: "neutral",
+      data: [], // Bisa diisi jika dibutuhkan
+    },
+  ];
+
   return (
-    <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
+    <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
       {/* cards */}
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
         Overview
@@ -77,7 +76,7 @@ export default function MainGrid() {
         columns={12}
         sx={{ mb: (theme) => theme.spacing(2) }}
       >
-        {data.map((card, index) => (
+        {cardData.map((card, index) => (
           <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>
             <StatCard {...card} />
           </Grid>
@@ -87,15 +86,7 @@ export default function MainGrid() {
         Details
       </Typography>
       <Grid container spacing={2} columns={6}>
-        <TableSiswa/>
-        {/* <Grid size={{ md: 12, lg: 9 }}>
-          <CustomizedDataGrid />
-        </Grid> */}
-        {/* <Grid size={{ xs: 12, lg: 3 }}>
-          <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>
-            <ChartUserByCountry />
-          </Stack>
-        </Grid> */}
+        <TableSiswa />
       </Grid>
       <Copyright sx={{ my: 4 }} />
     </Box>
