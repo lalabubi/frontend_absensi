@@ -37,7 +37,7 @@ export default function MainGrid() {
     {
       title: "Hadir",
       value: hadirData, // Jumlah hadir dari data API
-      interval: `Last ${daysInMonth} days`,
+      // interval: `Last ${daysInMonth} days`,
       trend: "up",
       data: [], // Bisa diisi jika dibutuhkan
     },
@@ -58,14 +58,14 @@ export default function MainGrid() {
     {
       title: "Telat",
       value: telatData, // Jumlah telat dari data API
-      interval: `Last ${daysInMonth} days`,
+      // interval: `Last ${daysInMonth} days`,
       trend: "neutral",
       data: [], // Bisa diisi jika dibutuhkan
     },
   ];
 
   return (
-    <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
+    <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" }}}>
       {/* cards */}
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
         Overview
@@ -74,7 +74,7 @@ export default function MainGrid() {
         container
         spacing={2}
         columns={12}
-        sx={{ mb: (theme) => theme.spacing(2) }}
+        sx={{ display: 'flex', justifyContent: 'center', mb: (theme) => theme.spacing(2) }}
       >
         {cardData.map((card, index) => (
           <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>

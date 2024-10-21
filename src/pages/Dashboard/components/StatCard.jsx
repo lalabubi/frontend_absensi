@@ -71,9 +71,9 @@ function StatCard({ title, value, interval, trend, data }) {
   const trendValues = { up: '+25%', down: '-25%', neutral: '+5%' };
 
   return (
-    <Card variant="outlined" sx={{ height: '100%', flexGrow: 1 }}>
+    <Card variant="outlined" sx={{ height: '200px', flexGrow: 1 }}>
       <CardContent>
-        <Typography component="h2" variant="subtitle2" gutterBottom>
+        <Typography component="h2" variant="subtitle2" gutterBottom sx={{fontSize: '20px', fontWeight: '10px'}}>
           {title}
         </Typography>
         <Stack
@@ -94,7 +94,7 @@ function StatCard({ title, value, interval, trend, data }) {
               {interval}
             </Typography>
           </Stack>
-          <Box sx={{ width: '100%', height: 50 }}>
+          {/* <Box sx={{ width: '100%', height: 50 }}>
             <SparkLineChart
               colors={[chartColor]}
               data={data}
@@ -113,7 +113,7 @@ function StatCard({ title, value, interval, trend, data }) {
             >
               <AreaGradient color={chartColor} id={`area-gradient-${value}`} />
             </SparkLineChart>
-          </Box>
+          </Box> */}
         </Stack>
       </CardContent>
     </Card>
