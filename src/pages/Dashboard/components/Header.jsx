@@ -4,7 +4,6 @@ import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import CustomDatePicker from './CustomDatePicker';
 import NavbarBreadcrumbs from './NavbarBreadcrumbs';
 import MenuButton from './MenuButton';
-
 import Search from './Search';
 
 export default function Header() {

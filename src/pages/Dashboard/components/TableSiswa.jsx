@@ -7,6 +7,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { useEffect, useState } from 'react';
+import client from '../../../routes/Client';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -22,14 +24,22 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
     backgroundColor: theme.palette.action.hover,
   },
-  // hide last border
   '&:last-child td, &:last-child th': {
     border: 0,
   },
 }));
 
-
 export default function TableSiswa() {
+  const [Data, setData] = useState([]);
+
+  useEffect(() => {
+    // Fetch data presensi
+    client.get("kehadiran").then(({ data }) => {
+      setData(data.data); // Set data ke state
+      console.log(data.data);
+    });
+  }, []);
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -43,14 +53,15 @@ export default function TableSiswa() {
           </TableRow>
         </TableHead>
         <TableBody>
-            <StyledTableRow>
-              <StyledTableCell component="th" scope="row">
-              </StyledTableCell>
-              <StyledTableCell align="right"></StyledTableCell>
-              <StyledTableCell align="right"></StyledTableCell>
-              <StyledTableCell align="right"></StyledTableCell>
-              <StyledTableCell align="right"></StyledTableCell>
+          {Data.map((row) => (
+            <StyledTableRow key={row.siswa_id}>
+              <StyledTableCell>{row.siswa.nisn}</StyledTableCell>
+              <StyledTableCell>{row.siswa.nama}</StyledTableCell>
+              <StyledTableCell>{row.waktu_datang || '-'}</StyledTableCell>
+              <StyledTableCell>{row.waktu_pulang || '-'}</StyledTableCell>
+              <StyledTableCell>{row.keterangan}</StyledTableCell>
             </StyledTableRow>
+          ))}
         </TableBody>
       </Table>
     </TableContainer>

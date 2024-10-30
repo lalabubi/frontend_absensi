@@ -13,6 +13,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import { useEffect } from 'react';
+import client from '../../routes/Client';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -38,6 +40,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function SiswaAdmin() {
   const [open, setOpen] = React.useState(false);
   const [openEdit, setOpenEdit] = React.useState(false);
+  const [dataSiswa, setDataSiswa] = React.useState([]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -54,6 +57,16 @@ export default function SiswaAdmin() {
   const handleCloseEdit = () => {
     setOpenEdit(false);
   };
+
+  const handleDelete = () => {
+    
+  }
+
+  useEffect(() => {
+    client.get('siswa').then(({data}) => {
+      setDataSiswa(data.data)
+    })
+  }, [])
 
   return (
     <>  
@@ -225,32 +238,35 @@ export default function SiswaAdmin() {
             </TableRow>
           </TableHead>
           <TableBody>
-            <StyledTableRow>
-              <StyledTableCell component="th" scope="row" align="center">
-                1234567890
-              </StyledTableCell>
-              <StyledTableCell align="center">John Doe</StyledTableCell>
-              <StyledTableCell align="center">Jl. Merdeka 123</StyledTableCell>
-              <StyledTableCell align="center">Laki-laki</StyledTableCell>
-              <StyledTableCell align="center">10A</StyledTableCell>
-              <StyledTableCell align="center">
-                <Button
-                  variant="contained"
-                  size="small"
-                  sx={{ backgroundColor: '#bc8adf', color: '#fff' }} 
-                  onClick={handleEditOpen}
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant="contained"
-                  size="small"
-                  sx={{ backgroundColor: '#DC143C', color: '#fff', ml: 1 }}
-                >
-                  Delete
-                </Button>
-              </StyledTableCell>
-            </StyledTableRow>
+            {dataSiswa.map((student) => (
+              <StyledTableRow key={student.id}>
+                <StyledTableCell component="th" scope="row" align="center">
+                  {student.nisn}
+                </StyledTableCell>
+                <StyledTableCell align="center">{student.nama}</StyledTableCell>
+                <StyledTableCell align="center">{student.alamat}</StyledTableCell>
+                <StyledTableCell align="center">{student.jenis_kelamin}</StyledTableCell>
+                <StyledTableCell align="center">{student.kelas}</StyledTableCell>
+                <StyledTableCell align="center">
+                  <Button
+                    variant="contained"
+                    size="small"
+                    sx={{ backgroundColor: '#bc8adf', color: '#fff' }}
+                    onClick={() => handleEditOpen(student)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    sx={{ backgroundColor: '#DC143C', color: '#fff', ml: 1 }}
+                    onClick={() => handleDelete(student.id)}
+                  >
+                    Delete
+                  </Button>
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
